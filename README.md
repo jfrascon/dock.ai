@@ -97,17 +97,3 @@ Use a different build context:
 ```bash
 ./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile /path/to/dockai
 ```
-
-Install and run the pre-commit hooks:
-
-```bash
-pre-commit install
-pre-commit install --hook-type commit-msg
-pre-commit run -a
-```
-
-If you are working directly on the `main` branch, the `no-commit-to-branch` hook will block the commit. Create a working branch before committing:
-
-```bash
-git switch -c improve-dockai
-```
