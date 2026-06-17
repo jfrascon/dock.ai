@@ -1,0 +1,26 @@
+# Python and pre-commit caches
+__pycache__/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+
+# Local virtual environments
+.venv/
+venv/
+
+# Build and runtime output
+build/
+dist/
+log/
+logs/
+tmp/
+
+# Local editor and OS files
+.DS_Store
+.idea/
+.vscode/
+
+# Local environment files
+.env
+.env.*
+!.env.example

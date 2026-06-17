@@ -1,0 +1,62 @@
+# syntax=docker/dockerfile:1
+
+# No default BASE_IMAGE is provided to ensure the build fails explicitly if
+# none is passed via --build-arg. The warning 'InvalidDefaultArgInFrom' can
+# be safely ignored — this is intentional (same pattern as Dockerfile.j2).
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}
+
+ARG IMAGE_MAIN_USER
+
+SHELL ["/bin/bash", "-e", "-o", "pipefail", "-c"]
+
+# --------------------------------------------------------------------
+# Root phase.
+#
+# This phase is reserved for system-level operations:
+#   - apt packages
+#   - Node.js runtime from NodeSource
+#   - Corepack global shims
+#   - bubblewrap
+#   - base tools required by installers
+#
+# User-level AI tooling is intentionally installed later under USER.
+# --------------------------------------------------------------------
+
+USER root
+
+# Validate IMAGE_MAIN_USER before doing any work.
+RUN <<EOF
+if [[ -z "${IMAGE_MAIN_USER}" ]]; then
+  echo "Error: IMAGE_MAIN_USER build arg is empty." >&2
+  exit 1
+fi
+
+if ! getent passwd "${IMAGE_MAIN_USER}" >/dev/null 2>&1; then
+  echo "Error: user '${IMAGE_MAIN_USER}' does not exist in the base image." >&2
+  exit 1
+fi
+EOF
+
+RUN --mount=type=bind,source=.,target=/tmp/context \
+    bash /tmp/context/install_ai_tools_root.sh
+
+# --------------------------------------------------------------------
+# User phase.
+#
+# Bun, pnpm global packages and RTK are installed as the development user
+# so they live under the user's HOME instead of /root.
+# --------------------------------------------------------------------
+
+USER ${IMAGE_MAIN_USER}
+WORKDIR /tmp
+
+# RCFILE controls which shell startup file receives the PATH entries written
+# by install_ai_tools_user.sh. Defaults to .bashrc.user to keep ~/.bashrc
+# clean. Override with --build-arg RCFILE=.bashrc if needed.
+ARG RCFILE=.bashrc.user
+
+RUN --mount=type=bind,source=.,target=/tmp/context \
+    bash /tmp/context/install_ai_tools_user.sh --rcfile "${RCFILE}"
+
+CMD ["/bin/bash"]

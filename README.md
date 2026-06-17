@@ -1,0 +1,101 @@
+# DockAI
+
+## What it is and why
+
+DockAI builds a Docker image from an existing base image and adds AI-assisted development tools for the normal user inside the container.
+
+The goal is to keep the base image separate from the AI tooling. You start with a base image that already contains your main development environment, and DockAI creates a derived image that keeps that environment while adding tools such as Bun, pnpm, context-mode, context7-mcp, and RTK.
+
+This avoids installing the same tools by hand in every container and makes the resulting environment easier to reproduce.
+
+## Description
+
+This repository contains these files:
+
+- `Dockerfile.ai-tools`: defines the derived image. The root phase installs system packages, Node.js, Corepack, and pnpm. The user phase installs AI tools under the `HOME` directory defined by the base image for the selected user.
+- `build_ai_image.sh`: runs `docker buildx build` with the required build arguments.
+- `install_ai_tools_root.sh`: installs system dependencies and prepares pnpm.
+- `install_ai_tools_user.sh`: installs user-level tools and writes the required `PATH` entries into the selected shell rc file.
+- `.pre-commit-config.yaml`: configures standard checks, shell formatting with `shfmt`, Dockerfile linting with Hadolint, and Conventional Commits validation.
+
+### Requirements
+
+You need Docker with `buildx` available on the machine that builds the image. To run the quality hooks, you also need `pre-commit`. The Hadolint hook uses Docker, so it requires the `docker` command to be available too.
+
+The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `jfr` as the default user.
+
+### Step by step
+
+1. Enter the project directory:
+
+   ```bash
+   cd /home/jfr/workspace/src/dockai
+   ```
+
+2. Build a derived image:
+
+   ```bash
+   ./build_ai_image.sh <base_image> <target_image>
+   ```
+
+3. If the main user in the base image is not `jfr`, pass it as the third argument:
+
+   ```bash
+   ./build_ai_image.sh ubuntu:24.04 my-ai-image:latest developer
+   ```
+
+4. Run the resulting image:
+
+   ```bash
+   docker run --rm -it my-ai-image:latest
+   ```
+
+5. Inside the container, verify that the tools are available:
+
+   ```bash
+   node --version
+   pnpm --version
+   bun --version
+   rtk --version
+   context-mode doctor
+   ```
+
+## Examples
+
+Build an image using the default options:
+
+```bash
+./build_ai_image.sh my-base:latest my-base-ai:latest
+```
+
+Build an image for a base image where the main user is named `developer`:
+
+```bash
+./build_ai_image.sh my-base:latest my-base-ai:latest developer
+```
+
+Use `.bashrc` instead of `.bashrc.user` for the generated `PATH` entries:
+
+```bash
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc
+```
+
+Use a different build context:
+
+```bash
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc /home/jfr/workspace/src/dockai
+```
+
+Install and run the pre-commit hooks:
+
+```bash
+pre-commit install
+pre-commit install --hook-type commit-msg
+pre-commit run -a
+```
+
+If you are working directly on the `main` branch, the `no-commit-to-branch` hook will block the commit. Create a working branch before committing:
+
+```bash
+git switch -c improve-dockai
+```
