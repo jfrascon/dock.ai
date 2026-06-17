@@ -1,5 +1,9 @@
 # dock.ia
 
+<p align="center">
+  <img src="logo.png" alt="dock.ia logo" width="400">
+</p>
+
 ## What it is and why
 
 dock.ia builds a Docker image from an existing base image and adds AI-assisted development tools for the normal user inside the container.
