@@ -22,7 +22,7 @@ This repository contains these files:
 
 You need Docker with `buildx` available on the machine that builds the image. To run the quality hooks, you also need `pre-commit`. The Hadolint hook uses Docker, so it requires the `docker` command to be available too.
 
-The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `jfr` as the default user.
+The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `dev` as the default user.
 
 ### Shell startup files
 
@@ -43,7 +43,7 @@ If you pass `.bashrc` as the rc file, the generated file becomes `${HOME}/.bashr
 1. Enter the project directory:
 
    ```bash
-   cd /home/jfr/workspace/src/dockai
+   cd dockai
    ```
 
 2. Build a derived image:
@@ -52,7 +52,7 @@ If you pass `.bashrc` as the rc file, the generated file becomes `${HOME}/.bashr
    ./build_ai_image.sh <base_image> <target_image>
    ```
 
-3. If the main user in the base image is not `jfr`, pass it as the third argument:
+3. If the main user in the base image is not `dev`, pass it as the third argument:
 
    ```bash
    ./build_ai_image.sh ubuntu:24.04 my-ai-image:latest developer
@@ -97,7 +97,7 @@ Use `.bashrc` instead of `.bashrc.user` for the generated `PATH` entries:
 Use a different build context:
 
 ```bash
-./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc /home/jfr/workspace/src/dockai
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc /path/to/dockai
 ```
 
 Install and run the pre-commit hooks:
