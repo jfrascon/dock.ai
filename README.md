@@ -22,7 +22,7 @@ This repository contains these files:
 
 You need Docker with `buildx` available on the machine that builds the image.
 
-The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `dev` as the default user.
+The base image must contain the user you want to use as the main container user. DockAI uses `dev` as the default user.
 
 ### Shell startup files
 
