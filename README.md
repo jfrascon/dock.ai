@@ -24,6 +24,20 @@ You need Docker with `buildx` available on the machine that builds the image. To
 
 The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `jfr` as the default user.
 
+### Shell startup files
+
+The user installer does not write the full `PATH` setup directly into the selected shell rc file. Instead, it creates a companion file by appending `.ai` to the rc file name. For example, if the selected rc file is `${HOME}/.bashrc.user`, the installer creates `${HOME}/.bashrc.user.ai`.
+
+That generated `.ai` file exports `BUN_INSTALL`, exports `PNPM_HOME`, and prepends the user-local tool directories to `PATH`.
+
+The selected rc file only receives one source line:
+
+```bash
+[ -f "${HOME}/.bashrc.user.ai" ] && . "${HOME}/.bashrc.user.ai"
+```
+
+If you pass `.bashrc` as the rc file, the generated file becomes `${HOME}/.bashrc.ai` and the source line is added to `${HOME}/.bashrc` instead.
+
 ### Step by step
 
 1. Enter the project directory:
