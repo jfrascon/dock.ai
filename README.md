@@ -97,3 +97,27 @@ Use a different build context:
 ```bash
 ./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile /path/to/dockai
 ```
+
+## Tool configuration
+
+The resulting image installs RTK and context-mode, but those tools still need their own configuration files and usage instructions. Read the upstream projects before deciding which files to mount and where they should live inside the container:
+
+- context-mode: https://github.com/mksglu/context-mode
+- RTK AI: https://github.com/rtk-ai/rtk
+
+A practical way to run the resulting image is through a `docker-compose.yml` file that mounts configuration files from the host into the container. The host paths in this example use `${XDG_CONFIG_HOME}` only as one possible layout; adapt them to your machine. The container paths show where the tools or editors would see those files when the default user is `dev`.
+
+```yaml
+services:
+  dockai:
+    image: my-base-ai:latest
+    working_dir: /home/dev/<workspace>
+    volumes:
+      - ${XDG_CONFIG_HOME}/codex:/home/dev/.codex
+      - ${XDG_CONFIG_HOME}/rtk:/home/dev/.config/rtk
+      - ${XDG_CONFIG_HOME}/copilot/hooks:/home/dev/.github/hooks
+      - ${XDG_CONFIG_HOME}/copilot/copilot-instructions.md:/home/dev/.github/copilot-instructions.md
+      - ${XDG_CONFIG_HOME}/vscode/mcp.json:/home/dev/<workspace>/.vscode/mcp.json
+```
+
+The example maps configuration files from known locations on the host into the locations expected inside the container. The exact container paths depend on the tools you use, the container user, and the workspace directory, so check the RTK and context-mode documentation before treating these mounts as final.
