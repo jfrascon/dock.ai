@@ -1,10 +1,10 @@
-# DockAI
+# dock.ia
 
 ## What it is and why
 
-DockAI builds a Docker image from an existing base image and adds AI-assisted development tools for the normal user inside the container.
+dock.ia builds a Docker image from an existing base image and adds AI-assisted development tools for the normal user inside the container.
 
-The goal is to keep the base image separate from the AI tooling. You start with a base image that already contains your main development environment, and DockAI creates a derived image that keeps that environment while adding tools such as Bun, pnpm, context-mode, context7-mcp, and RTK.
+The goal is to keep the base image separate from the AI tooling. You start with a base image that already contains your main development environment, and dock.ia creates a derived image that keeps that environment while adding tools such as Bun, pnpm, context-mode, context7-mcp, and RTK.
 
 This avoids installing the same tools by hand in every container and makes the resulting environment easier to reproduce.
 
@@ -22,7 +22,7 @@ This repository contains these files:
 
 You need Docker with `buildx` available on the machine that builds the image.
 
-The base image must contain the user you want to use as the main container user. DockAI uses `dev` as the default user.
+The base image must contain the user you want to use as the main container user. dock.ia uses `dev` as the default user.
 
 ### Shell startup files
 
@@ -41,7 +41,7 @@ The selected rc file only receives one source line:
 1. Enter the project directory:
 
    ```bash
-   cd dockai
+   cd dock.ia
    ```
 
 2. Build a derived image:
@@ -95,7 +95,7 @@ Pass an explicit rc file if your base image uses a different Bash startup file:
 Use a different build context:
 
 ```bash
-./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile /path/to/dockai
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile /path/to/dock.ia
 ```
 
 ## Tool configuration
@@ -109,7 +109,7 @@ A practical way to run the resulting image is through a `docker-compose.yml` fil
 
 ```yaml
 services:
-  dockai:
+  dock-ia:
     image: my-base-ai:latest
     working_dir: /home/dev/<workspace>
     volumes:
