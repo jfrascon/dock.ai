@@ -51,10 +51,9 @@ RUN --mount=type=bind,source=.,target=/tmp/context \
 USER ${IMAGE_MAIN_USER}
 WORKDIR /tmp
 
-# RCFILE controls which shell startup file receives the PATH entries written
-# by install_ai_tools_user.sh. Defaults to .bashrc.user to keep ~/.bashrc
-# clean. Override with --build-arg RCFILE=.bashrc if needed.
-ARG RCFILE=.bashrc.user
+# RCFILE controls which shell startup file receives the PATH source line written
+# by install_ai_tools_user.sh.
+ARG RCFILE=.bashrc
 
 RUN --mount=type=bind,source=.,target=/tmp/context \
     bash /tmp/context/install_ai_tools_user.sh --rcfile "${RCFILE}"

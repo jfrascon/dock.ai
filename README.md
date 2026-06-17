@@ -26,17 +26,15 @@ The base image must contain the user you want to use as the main container user.
 
 ### Shell startup files
 
-The user installer does not write the full `PATH` setup directly into the selected shell rc file. Instead, it creates a companion file by appending `.ai` to the rc file name. For example, if the selected rc file is `${HOME}/.bashrc.user`, the installer creates `${HOME}/.bashrc.user.ai`.
+The user installer does not write the full `PATH` setup directly into the selected shell rc file. Instead, it creates a companion file by appending `.ai` to the rc file name. For example, if the selected rc file is `${HOME}/.bashrc`, the installer creates `${HOME}/.bashrc.ai`.
 
 That generated `.ai` file exports `BUN_INSTALL`, exports `PNPM_HOME`, and prepends the user-local tool directories to `PATH`.
 
 The selected rc file only receives one source line:
 
 ```bash
-[ -f "${HOME}/.bashrc.user.ai" ] && . "${HOME}/.bashrc.user.ai"
+[ -f "${HOME}/.bashrc.ai" ] && . "${HOME}/.bashrc.ai"
 ```
-
-If you pass `.bashrc` as the rc file, the generated file becomes `${HOME}/.bashrc.ai` and the source line is added to `${HOME}/.bashrc` instead.
 
 ### Step by step
 
@@ -88,16 +86,16 @@ Build an image for a base image where the main user is named `developer`:
 ./build_ai_image.sh my-base:latest my-base-ai:latest developer
 ```
 
-Use `.bashrc` instead of `.bashrc.user` for the generated `PATH` entries:
+Pass an explicit rc file if your base image uses a different Bash startup file:
 
 ```bash
-./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile
 ```
 
 Use a different build context:
 
 ```bash
-./build_ai_image.sh my-base:latest my-base-ai:latest developer .bashrc /path/to/dockai
+./build_ai_image.sh my-base:latest my-base-ai:latest developer .profile /path/to/dockai
 ```
 
 Install and run the pre-commit hooks:

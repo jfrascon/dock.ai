@@ -7,7 +7,7 @@ usage() {
     echo "<base_image>:       The base image to use for the Docker build (e.g., ubuntu:24.04)"
     echo "<image>:            The name and tag for the resulting Docker image (e.g., myimage:latest)"
     echo "[image_main_user]:  Optional. The main user in the base image (default: dev)"
-    echo "[rcfile]:           Optional. Shell rc file for PATH entries, relative to HOME (default: .bashrc.user)"
+    echo "[rcfile]:           Optional. Shell rc file for PATH entries, relative to HOME (default: .bashrc)"
     echo "[context_path]:     Optional. The path to the Docker build context (default: this script directory)"
     exit "${1:-0}"
 }
@@ -23,7 +23,7 @@ script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 base_image="${1:-}"
 image="${2:-}"
 image_main_user="${3:-dev}"
-rcfile="${4:-.bashrc.user}"
+rcfile="${4:-.bashrc}"
 context_path="${5:-${script_dir}}"
 dockerfile_path="${context_path}/Dockerfile.ai-tools"
 

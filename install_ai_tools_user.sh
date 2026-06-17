@@ -9,12 +9,11 @@
 #       - context-mode
 #       - @upstash/context7-mcp
 #   - RTK (Rust Token Killer)
-#   - PATH entries in the rc file specified by --rcfile (default: ~/.bashrc.user)
+#   - PATH entries in the rc file specified by --rcfile (default: ~/.bashrc)
 #
 # Arguments:
 #   --rcfile <filename>   Shell startup file for PATH entries, relative to
-#                         HOME. Defaults to ".bashrc.user". Override to use
-#                         another file, e.g. ".bashrc".
+#                         HOME. Defaults to ".bashrc".
 
 set -euo pipefail
 
@@ -35,12 +34,10 @@ fi
 # Arguments.
 #
 # --rcfile <filename>  Shell startup file that receives the PATH entries for
-#                      user-local tooling. The filename is relative to HOME
-#                      (e.g. ".bashrc" or ".bashrc.user"). Defaults to
-#                      ".bashrc.user" so the script does not write directly
-#                      to ~/.bashrc unless the caller explicitly requests it.
+#                      user-local tooling. The filename is relative to HOME.
+#                      Defaults to ".bashrc".
 # ---------------------------------------------------------------------------
-RCFILE=".bashrc.user"
+RCFILE=".bashrc"
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
