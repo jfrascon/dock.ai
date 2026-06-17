@@ -16,11 +16,11 @@ This repository contains these files:
 - `build_ai_image.sh`: runs `docker buildx build` with the required build arguments.
 - `install_ai_tools_root.sh`: installs system dependencies and prepares pnpm.
 - `install_ai_tools_user.sh`: installs user-level tools and writes the required `PATH` entries into the selected shell rc file.
-- `.pre-commit-config.yaml`: configures standard checks, shell formatting with `shfmt`, Dockerfile linting with Hadolint, and Conventional Commits validation.
+- `.pre-commit-config.yaml`: configures standard checks, shell formatting with `shfmt`, and Conventional Commits validation.
 
 ### Requirements
 
-You need Docker with `buildx` available on the machine that builds the image. To run the quality hooks, you also need `pre-commit`. The Hadolint hook uses Docker, so it requires the `docker` command to be available too.
+You need Docker with `buildx` available on the machine that builds the image.
 
 The base image must contain the user you want to use as the main container user, and that user must have a valid `HOME` directory. DockAI uses `dev` as the default user.
 
